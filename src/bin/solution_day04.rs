@@ -2,8 +2,59 @@ use std::ops::Index;
 use std::{array, fs, vec};
 use std::path::Path;
 
+#[derive(Debug, Clone, Copy)]
+struct Point {x: i32, y: i32}
 
-fn check_xmas(char_mat: &Vec<&str>, col: usize, row: usize, next: usize, reverse: bool) -> bool {
+impl Point {
+    fn get_direction(direction: Direction) -> Point {
+        match direction {
+            Direction::Right => Point { x: 1, y: 0 },
+            Direction::Left => Point { x: -1, y: 0 },
+            Direction::Up => Point { x: 0, y: 1 },
+            Direction::Down => Point { x: 0, y: -1 },
+            Direction::RightUp => Point { x: 1, y: 1 },
+            Direction::RightDown => Point { x: 1, y: -1 },
+            Direction::LeftUp => Point { x: -1, y: 1 },
+            Direction::LeftDown => Point { x: -1, y: -1 },
+        }
+    }
+}
+
+enum Direction {
+    Right,
+    Left,
+    Up,
+    Down,
+    RightUp,
+    RightDown,
+    LeftUp,
+    LeftDown,
+}
+
+const DIRECTIONS: [Direction; 8] = [
+    Direction::Right,
+    Direction::Left,
+    Direction::Up,
+    Direction::Down,
+    Direction::RightUp,
+    Direction::RightDown,
+    Direction::LeftUp,
+    Direction::LeftDown,
+];
+
+struct ProblemSolver {
+    grid: Vec<char> 
+}
+
+
+impl ProblemSolver {
+
+    fn solution1 (self) {
+
+    }
+}
+
+fn check_xmas(char_mat: &Vec<&str>, pos: Point, dircetion: Direction) -> bool {
     
     let char_order: Vec<char>  = vec!['X','M', 'A', 'S'];
 
@@ -11,10 +62,8 @@ fn check_xmas(char_mat: &Vec<&str>, col: usize, row: usize, next: usize, reverse
     let max_row = char_mat.len();
     let max_col = char_mat[0].len();
 
-    let current_val = char_mat[row]
-        .chars().nth(col).unwrap(); 
-    
-    
+    let current_val = char_mat[pos.y as usize]
+        .chars().nth(pos.x as usize).unwrap(); 
 
     return true;
 }
@@ -36,12 +85,15 @@ fn main() {
         for (col, character) in line.chars().enumerate() {
             print!("{}", character);
 
-            // if current char is a starter
-            if character == 'S' {
-                check_xmas(&char_vec, col, row, 1, true);
+            let curr_point = Point {x: col as usize, y: row as usize};
 
-            } else if  character == 'X' {
-                check_xmas(&char_vec, col, row, 1, false);
+            // if current char is a starter
+            if character == 'X' {
+
+                for direction in DIRECTIONS {
+                    check_xmas(&char_vec, curr_point, direction);
+                }
+
             }
             
         }
